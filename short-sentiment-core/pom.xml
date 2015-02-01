@@ -5,7 +5,19 @@
 	<artifactId>short-sentiment-core</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>short-sentiment-core</name>
-
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 	<dependencies>
 		<dependency>
 			<groupId>cc.mallet</groupId>

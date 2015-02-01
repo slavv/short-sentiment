@@ -8,18 +8,20 @@ import cc.mallet.classify.Classifier;
 
 public class Main {
 	public static void main(String[] args) {
-		TweetsGenerator generator = new TweetsGenerator("sample-corpus.csv");
-		TweetClassifierTrainer trainer = new TweetClassifierTrainer();
+		TweetsGenerator generator = new TweetsGenerator("full-corpus.csv");
 
 		try {
 			List<Tweet> tweets = generator.loadTweets();
-			Classifier naiveBayes = trainer.getNaiveBayesClassifier(tweets);
+			TweetClassifierTrainer trainer = new TweetClassifierTrainer(tweets);
+
+			Classifier naiveBayes = trainer.getNaiveBayesClassifier();
 
 			String newMessage = "@Apple has bad customer service!!";
-			Classification result = naiveBayes
-					.classify(newMessage);
+			Classification result = naiveBayes.classify(newMessage);
 			System.out.println("\"" + newMessage + "\"" + " is classified as "
 					+ result.getLabeling().getBestLabel());
+
+			System.out.println(trainer.getNaiveBayesMetrics());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

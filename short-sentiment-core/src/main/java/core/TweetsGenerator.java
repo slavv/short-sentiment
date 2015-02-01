@@ -10,24 +10,25 @@ import java.util.List;
 
 public class TweetsGenerator {
 	private String filename;
-	
+
 	private List<Tweet> tweets;
-	
+
 	public TweetsGenerator(String filename) {
 		this.filename = filename;
 		tweets = new ArrayList<Tweet>();
 	}
-	
+
 	private String removeQuotes(String s) {
-		return s.substring(1, s.length()-1);
+		return s.substring(1, s.length() - 1);
 	}
-	
+
 	public List<Tweet> loadTweets() throws IOException {
-		List<String> lines = Files.readAllLines(Paths.get(filename), Charset.defaultCharset());
-		Iterator<String> lineIterator = lines.iterator(); 
+		List<String> lines = Files.readAllLines(Paths.get(filename),
+				Charset.defaultCharset());
+		Iterator<String> lineIterator = lines.iterator();
 		while (lineIterator.hasNext()) {
 			String line = lineIterator.next();
-			while(!line.matches(".*[^\"]\"$")) {
+			while (!line.matches(".*[^\"]\"$")) {
 				line += lineIterator.next();
 			}
 			String[] tokens = line.split(",", 5);
@@ -38,9 +39,9 @@ public class TweetsGenerator {
 		}
 		return tweets;
 	}
-	
+
 	public void printTweets() {
-		for(Tweet t: tweets) {
+		for (Tweet t : tweets) {
 			System.out.println(t.toString());
 		}
 	}
