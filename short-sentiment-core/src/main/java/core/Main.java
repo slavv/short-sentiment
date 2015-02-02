@@ -4,7 +4,7 @@ import java.util.List;
 
 import cc.mallet.classify.Classification;
 import cc.mallet.classify.Classifier;
-import core.classifier.NaiveBayesGateClassifier;
+import core.classifier.NaiveBayesClassifier;
 import core.classifier.TweetClassifier;
 
 public class Main {
@@ -14,7 +14,7 @@ public class Main {
 		try {
 			List<Tweet> tweets = generator.loadTweets();
 
-			TweetClassifier classifier = new NaiveBayesGateClassifier(tweets, 0.9);
+			TweetClassifier classifier = new NaiveBayesClassifier(tweets, 0.9);
 			Classifier naiveBayes = classifier.getMalletClassifier();
 
 			String newMessage = "@Apple has bad customer service!!";

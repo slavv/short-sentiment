@@ -14,17 +14,9 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
-import cc.mallet.types.Instance;
-import cc.mallet.types.InstanceList;
-import cc.mallet.util.Randoms;
 import core.Tweet;
 
-/**
- * Builds various Mallet classifiers given list of tweets.
- */
 public class NaiveBayesClassifier implements TweetClassifier {
-	private final int TRAINING = 0;
-	private final int TESTING = 1;
 	private final double trainingPart;
 	private final List<Tweet> tweets;
 
@@ -42,43 +34,32 @@ public class NaiveBayesClassifier implements TweetClassifier {
 	 */
 	public NaiveBayesClassifier(List<Tweet> tweets, double trainingPart) {
 		if (trainingPart < 0 || trainingPart > 1)
-			throw new IllegalArgumentException("The training part must be between 0 and 1.");
+			throw new IllegalArgumentException(
+					"The training part must be between 0 and 1.");
 		this.tweets = tweets;
 		this.trainingPart = trainingPart;
 	}
 
+	@Override
 	public synchronized Classifier getMalletClassifier() {
 		if (classifier != null) {
 			return classifier;
 		}
 
-		NaiveBayesTrainer trainer = new NaiveBayesTrainer();
-		InstanceList[] instanceLists = buildInstanceLists(tweets);
+		ClassifierResult result = ClassifierBuilder.buildClassifier(tweets,
+				new NaiveBayesTrainer(), buildPipe(), trainingPart);
 
-		classifier = trainer.train(instanceLists[TRAINING]);
-		trial = new Trial(classifier, instanceLists[TESTING]);
+		classifier = result.getClassifier();
+		trial = result.getTrial();
 		return classifier;
 	}
 
+	@Override
 	public synchronized Double getAccuracy() {
 		if (trial == null) {
 			getMalletClassifier();
 		}
 		return trial.getAccuracy();
-	}
-
-	private InstanceList[] buildInstanceLists(List<Tweet> tweets) {
-		InstanceList instances = new InstanceList(buildPipe());
-
-		int index = 0;
-		for (Tweet tweet : tweets) {
-			instances.addThruPipe(new Instance(tweet.getText(), tweet
-					.getSentiment(), "name:" + index++, null));
-		}
-
-		InstanceList[] instanceLists = instances.split(new Randoms(),
-				new double[] { trainingPart, 1 - trainingPart, 0.0 });
-		return instanceLists;
 	}
 
 	private Pipe buildPipe() {

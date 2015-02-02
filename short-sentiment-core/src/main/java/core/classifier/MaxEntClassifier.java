@@ -1,10 +1,12 @@
 package core.classifier;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import cc.mallet.classify.Classifier;
-import cc.mallet.classify.NaiveBayesTrainer;
+import cc.mallet.classify.MaxEntTrainer;
 import cc.mallet.classify.Trial;
+import cc.mallet.pipe.CharSequence2TokenSequence;
 import cc.mallet.pipe.FeatureSequence2FeatureVector;
 import cc.mallet.pipe.Input2CharSequence;
 import cc.mallet.pipe.Pipe;
@@ -12,10 +14,9 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
-import core.CharSequence2StemmedTokenSequence;
 import core.Tweet;
 
-public class NaiveBayesGateClassifier implements TweetClassifier {
+public class MaxEntClassifier implements TweetClassifier {
 	private final double trainingPart;
 	private final List<Tweet> tweets;
 
@@ -31,9 +32,10 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 	 * @param trainingPart
 	 *            a number between 0 and 1.
 	 */
-	public NaiveBayesGateClassifier(List<Tweet> tweets, double trainingPart) {
+	public MaxEntClassifier(List<Tweet> tweets, double trainingPart) {
 		if (trainingPart < 0 || trainingPart > 1)
-			throw new IllegalArgumentException("The training part must be between 0 and 1.");
+			throw new IllegalArgumentException(
+					"The training part must be between 0 and 1.");
 		this.tweets = tweets;
 		this.trainingPart = trainingPart;
 	}
@@ -45,7 +47,7 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 		}
 
 		ClassifierResult result = ClassifierBuilder.buildClassifier(tweets,
-				new NaiveBayesTrainer(), buildPipe(), trainingPart);
+				new MaxEntTrainer(), buildPipe(), trainingPart);
 
 		classifier = result.getClassifier();
 		trial = result.getTrial();
@@ -61,9 +63,11 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 	}
 
 	private Pipe buildPipe() {
+		Pattern tokenPattern = Pattern.compile("[\\p{L}\\p{N}_]+");
+
 		SerialPipes pipeline = new SerialPipes(new Pipe[] {
 				new Input2CharSequence("UTF-8"),
-				new CharSequence2StemmedTokenSequence(),
+				new CharSequence2TokenSequence(tokenPattern),
 				new TokenSequenceRemoveStopwords(true, true),
 				new TokenSequence2FeatureSequence(), new Target2Label(),
 				new FeatureSequence2FeatureVector() });
