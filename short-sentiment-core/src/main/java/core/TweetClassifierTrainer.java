@@ -1,14 +1,12 @@
 package core;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 import cc.mallet.classify.Classifier;
 import cc.mallet.classify.ClassifierTrainer;
 import cc.mallet.classify.NaiveBayes;
 import cc.mallet.classify.NaiveBayesTrainer;
 import cc.mallet.classify.Trial;
-import cc.mallet.pipe.CharSequence2TokenSequence;
 import cc.mallet.pipe.FeatureSequence2FeatureVector;
 import cc.mallet.pipe.Input2CharSequence;
 import cc.mallet.pipe.Pipe;
@@ -67,11 +65,9 @@ public class TweetClassifierTrainer {
 	}
 
 	private Pipe buildPipe() {
-		Pattern tokenPattern = Pattern.compile("[\\p{L}\\p{N}_]+");
-
 		SerialPipes pipeline = new SerialPipes(new Pipe[] {
 				new Input2CharSequence("UTF-8"),
-				new CharSequence2TokenSequence(tokenPattern),
+				new Input2StemmedTokenSequence(),
 				new TokenSequenceRemoveStopwords(true, true),
 				new TokenSequence2FeatureSequence(), new Target2Label(),
 				new FeatureSequence2FeatureVector() });

@@ -24,6 +24,9 @@ public class Main {
 			System.out.println(trainer.getNaiveBayesMetrics());
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }
