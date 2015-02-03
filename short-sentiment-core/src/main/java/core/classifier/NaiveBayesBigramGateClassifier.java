@@ -14,8 +14,12 @@ import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
 import core.Tweet;
 import core.pipe.CharSequence2StemmedTokenSequence;
+import core.pipe.TokenSequence2NgramTokenSequence;
 
-public class NaiveBayesGateClassifier implements TweetClassifier {
+/**
+ * Builds various Mallet classifiers given list of tweets.
+ */
+public class NaiveBayesBigramGateClassifier implements TweetClassifier {
 	private final double trainingPart;
 	private final List<Tweet> tweets;
 
@@ -31,7 +35,8 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 	 * @param trainingPart
 	 *            a number between 0 and 1.
 	 */
-	public NaiveBayesGateClassifier(List<Tweet> tweets, double trainingPart) {
+	public NaiveBayesBigramGateClassifier(List<Tweet> tweets,
+			double trainingPart) {
 		if (trainingPart < 0 || trainingPart > 1)
 			throw new IllegalArgumentException(
 					"The training part must be between 0 and 1.");
@@ -62,9 +67,11 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 	}
 
 	private Pipe buildPipe() {
+
 		SerialPipes pipeline = new SerialPipes(new Pipe[] {
 				new Input2CharSequence("UTF-8"),
 				new CharSequence2StemmedTokenSequence(),
+				new TokenSequence2NgramTokenSequence(2),
 				new TokenSequenceRemoveStopwords(true, true),
 				new TokenSequence2FeatureSequence(), new Target2Label(),
 				new FeatureSequence2FeatureVector() });

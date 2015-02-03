@@ -9,9 +9,9 @@ import java.util.Iterator;
 import java.util.List;
 
 public class TweetsGenerator {
-	private String filename;
+	private final String filename;
 
-	private List<Tweet> tweets;
+	private final List<Tweet> tweets;
 
 	public TweetsGenerator(String filename) {
 		this.filename = filename;
@@ -38,6 +38,32 @@ public class TweetsGenerator {
 			tweets.add(new Tweet(theme, sentiment, text));
 		}
 		return tweets;
+	}
+
+	public List<Tweet> getSubjectiveTweets() {
+		List<Tweet> subjectiveTweets = new ArrayList<Tweet>();
+		for (Tweet t : tweets) {
+			String sentiment = t.getSentiment();
+			if(sentiment.equals("positive") || sentiment.equals("negative")) {
+				subjectiveTweets.add(t);
+			}
+		}
+		return subjectiveTweets;
+	}
+
+	public List<Tweet> getTweetsBySubjectivity() {
+		List<Tweet> relevantTweets = new ArrayList<Tweet>();
+		for (Tweet t : tweets) {
+			String sentiment = t.getSentiment();
+			if(sentiment.equals("irrelevant")) continue;
+			if(sentiment.equals("positive") || sentiment.equals("negative")) {
+				t.setSentiment("subjective");
+			} else {
+				t.setSentiment("objective");
+			}
+			relevantTweets.add(t);
+		}
+		return relevantTweets;
 	}
 
 	public void printTweets() {

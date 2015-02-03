@@ -1,4 +1,4 @@
-package core;
+package core.pipe;
 
 import gate.util.GateException;
 
@@ -8,6 +8,7 @@ import java.io.Serializable;
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.TokenSequence;
+import core.GateProcessor;
 
 public class CharSequence2StemmedTokenSequence extends Pipe implements Serializable {
 	/**
