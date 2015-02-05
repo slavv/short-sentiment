@@ -4,9 +4,12 @@ import gate.util.GateException;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
+import cc.mallet.types.Token;
 import cc.mallet.types.TokenSequence;
 import core.GateProcessor;
 
@@ -34,7 +37,7 @@ public class CharSequence2StemmedTokenSequence extends Pipe implements Serializa
 	public Instance pipe(Instance carrier) {
 		CharSequence charSequence = (CharSequence) carrier.getData();
 		String dataString = charSequence.toString();
-		String[] tokens = {};
+		List<Token> tokens = new ArrayList<>();
 		try {
 			tokens = processor.processString(dataString);
 		} catch (GateException e) {

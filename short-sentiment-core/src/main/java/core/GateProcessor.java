@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import cc.mallet.types.Token;
+
 public class GateProcessor {
 	String DEFAULT_STATE = "twitterState.xgapp";
 	CorpusController controller;
@@ -42,7 +44,7 @@ public class GateProcessor {
 				new File(state));
 	}
 
-	public String[] processString(String text) throws GateException {
+	public List<Token> processString(String text) throws GateException {
 		Corpus corpus = Factory.newCorpus("Tweet corpus");
 		Document document = Factory.newDocument(text);
 		corpus.add(document);
@@ -51,15 +53,15 @@ public class GateProcessor {
 		return getTokens(corpus);
 	}
 
-	private String[] getTokens(Corpus corpus) {
+	private List<Token> getTokens(Corpus corpus) {
 		Document doc = corpus.get(0);
-		List<String> tokens = new ArrayList<String>();
+		List<Token> tokens = new ArrayList<Token>();
 		for (Annotation a : doc.getAnnotations()) {
 			if (a.getType().equals("Token")) {
 				FeatureMap features = a.getFeatures();
-				tokens.add((String) features.get("stem"));
+				tokens.add(new Token((String) features.get("stem")));
 			}
 		}
-		return tokens.toArray(new String[0]);
+		return tokens;
 	}
 }
