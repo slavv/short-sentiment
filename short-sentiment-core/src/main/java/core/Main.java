@@ -13,7 +13,8 @@ public class Main {
 		TweetsGenerator generator = new TweetsGenerator("full-corpus.csv");
 
 		try {
-			List<Tweet> tweets = generator.loadTweets();
+			generator.loadTweets();
+			List<SentimentDocument> tweets = generator.getTweets();
 			System.out.println("All tweets");
 			measureAccuracy(tweets);
 			tweets = generator.getSubjectiveTweets();
@@ -35,12 +36,13 @@ public class Main {
 		}
 	}
 
-	public static void measureAccuracy(final List<Tweet> tweets) {
+	public static void measureAccuracy(final List<SentimentDocument> docments) {
 		int samples = 5;
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
+					@Override
 					public TweetClassifier buildClassifier() {
-						return new NaiveBayesClassifier(tweets, 0.9);
+						return new NaiveBayesClassifier(docments, 0.9);
 					}
 				}, samples);
 		System.out.println("NaiveBayes: " + aca.getAverageAccuracy());
@@ -61,8 +63,9 @@ public class Main {
 //				.println("NaiveBayesBigrameGate: " + aca.getAverageAccuracy());
 
 		aca = new AverageClassifierAccuracy(new EvaluationClassifierBuilder() {
+			@Override
 			public TweetClassifier buildClassifier() {
-				return new MaxEntClassifier(tweets, 0.9);
+				return new MaxEntClassifier(docments, 0.9);
 			}
 		}, samples);
 		System.out.println("Max ent: " + aca.getAverageAccuracy());

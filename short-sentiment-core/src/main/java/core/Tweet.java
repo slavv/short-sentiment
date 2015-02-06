@@ -1,16 +1,12 @@
 package core;
 
-public class Tweet {
+public class Tweet extends SentimentDocument {
 	public Tweet(String theme, String sentiment, String text) {
-		super();
+		super(sentiment, text);
 		this.theme = theme;
-		this.sentiment = sentiment;
-		this.text = text;
 	}
 
-	private String theme;
-	private String sentiment;
-	private String text;
+	String theme;
 
 	public String getTheme() {
 		return theme;
@@ -20,22 +16,7 @@ public class Tweet {
 		this.theme = theme;
 	}
 
-	public String getSentiment() {
-		return sentiment;
-	}
-
-	public void setSentiment(String sentiment) {
-		this.sentiment = sentiment;
-	}
-
-	public String getText() {
-		return text;
-	}
-
-	public void setText(String text) {
-		this.text = text;
-	}
-
+	@Override
 	public String toString() {
 		return theme + " " + sentiment + " " + text;
 	}

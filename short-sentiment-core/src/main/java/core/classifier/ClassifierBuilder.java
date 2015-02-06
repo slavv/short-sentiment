@@ -9,14 +9,14 @@ import cc.mallet.pipe.Pipe;
 import cc.mallet.types.Instance;
 import cc.mallet.types.InstanceList;
 import cc.mallet.util.Randoms;
-import core.Tweet;
+import core.SentimentDocument;
 
 public class ClassifierBuilder {
 
 	private final static int TRAINING = 0;
 	private final static int TESTING = 1;
 
-	public static ClassifierResult buildClassifier(List<Tweet> tweets,
+	public static ClassifierResult buildClassifier(List<SentimentDocument> tweets,
 			ClassifierTrainer<?> trainer, Pipe pipe, double trainingPart) {
 		InstanceList[] instanceLists = buildInstanceLists(tweets, pipe,
 				trainingPart);
@@ -27,13 +27,13 @@ public class ClassifierBuilder {
 		return new ClassifierResult(classifier, trial);
 	}
 
-	private static InstanceList[] buildInstanceLists(List<Tweet> tweets, Pipe pipe,
+	private static InstanceList[] buildInstanceLists(List<SentimentDocument> docs, Pipe pipe,
 			double trainingPart) {
 		InstanceList instances = new InstanceList(pipe);
 
 		int index = 0;
-		for (Tweet tweet : tweets) {
-			instances.addThruPipe(new Instance(tweet.getText(), tweet
+		for (SentimentDocument doc: docs) {
+			instances.addThruPipe(new Instance(doc.getText(), doc
 					.getSentiment(), "name:" + index++, null));
 		}
 

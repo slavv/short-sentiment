@@ -40,8 +40,16 @@ public class TweetsGenerator {
 		return tweets;
 	}
 
-	public List<Tweet> getSubjectiveTweets() {
-		List<Tweet> subjectiveTweets = new ArrayList<Tweet>();
+	public List<SentimentDocument> getTweets() {
+		List<SentimentDocument> subjectiveTweets = new ArrayList<SentimentDocument>();
+		for (Tweet t : tweets) {
+			subjectiveTweets.add(t);
+		}
+		return subjectiveTweets;
+	}
+
+	public List<SentimentDocument> getSubjectiveTweets() {
+		List<SentimentDocument> subjectiveTweets = new ArrayList<SentimentDocument>();
 		for (Tweet t : tweets) {
 			String sentiment = t.getSentiment();
 			if(sentiment.equals("positive") || sentiment.equals("negative")) {
@@ -51,8 +59,8 @@ public class TweetsGenerator {
 		return subjectiveTweets;
 	}
 
-	public List<Tweet> getTweetsBySubjectivity() {
-		List<Tweet> relevantTweets = new ArrayList<Tweet>();
+	public List<SentimentDocument> getTweetsBySubjectivity() {
+		List<SentimentDocument> relevantTweets = new ArrayList<SentimentDocument>();
 		for (Tweet t : tweets) {
 			String sentiment = t.getSentiment();
 			if(sentiment.equals("irrelevant")) continue;

@@ -12,31 +12,32 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
-
-import core.Tweet;
+import core.SentimentDocument;
 import core.pipe.CharSequence2StemmedTokenSequence;
 
 public class NaiveBayesGateClassifier implements TweetClassifier {
 	private final double trainingPart;
-	private final List<Tweet> tweets;
+	private final List<SentimentDocument> documents;
 
 	private Classifier classifier;
 	private Trial trial;
 
 	/**
 	 * Creates new Naive Bayes classifier using <code>trainingPart</code>
-	 * percentage of the given tweets. The rest data will be used for testing.
+	 * percentage of the given documents. The rest data will be used for
+	 * testing.
 	 *
 	 * @param tweets
-	 *            a list of tweets
+	 *            a list of documents
 	 * @param trainingPart
 	 *            a number between 0 and 1.
 	 */
-	public NaiveBayesGateClassifier(List<Tweet> tweets, double trainingPart) {
+	public NaiveBayesGateClassifier(List<SentimentDocument> documents,
+			double trainingPart) {
 		if (trainingPart < 0 || trainingPart > 1)
 			throw new IllegalArgumentException(
 					"The training part must be between 0 and 1.");
-		this.tweets = tweets;
+		this.documents = documents;
 		this.trainingPart = trainingPart;
 	}
 
@@ -46,7 +47,7 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 			return classifier;
 		}
 
-		ClassifierResult result = ClassifierBuilder.buildClassifier(tweets,
+		ClassifierResult result = ClassifierBuilder.buildClassifier(documents,
 				new NaiveBayesTrainer(), buildPipe(), trainingPart);
 
 		classifier = result.getClassifier();
