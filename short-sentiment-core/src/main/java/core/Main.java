@@ -1,39 +1,50 @@
 package core;
 
+import java.io.IOException;
 import java.util.List;
 
-import cc.mallet.classify.Classification;
-import cc.mallet.classify.Classifier;
 import core.classifier.MaxEntClassifier;
 import core.classifier.NaiveBayesClassifier;
 import core.classifier.TweetClassifier;
 
 public class Main {
 	public static void main(String[] args) {
-		TweetsGenerator generator = new TweetsGenerator("full-corpus.csv");
+		measureAccuracyWithShortReviewsData();
+	}
 
+	public static void measureAccuracyWithShortReviewsData() {
+		ShortMovieReviewsGenerator generator = new ShortMovieReviewsGenerator("short-movie-reviews.txt");
 		try {
-			generator.loadTweets();
-			List<SentimentDocument> tweets = generator.getTweets();
-			System.out.println("All tweets");
-			measureAccuracy(tweets);
-			tweets = generator.getSubjectiveTweets();
-			System.out.println("########################");
-			System.out.println("Subjective tweets");
-			measureAccuracy(tweets);
-
-			TweetClassifier classifier = new NaiveBayesClassifier(tweets, 0.9);
-			Classifier naiveBayes = classifier.getMalletClassifier();
-
-			String newMessage = "@Apple sucks!!";
-			Classification result = naiveBayes.classify(newMessage);
-			System.out.println("\"" + newMessage + "\"" + " is classified as "
-					+ result.getLabeling().getBestLabel());
-
-			System.out.println(classifier.getAccuracy());
-		} catch (Exception e) {
+			generator.loadReviews();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		List<SentimentDocument> reviews = generator.getReviews();
+		System.out.println("All tweets");
+		measureAccuracy(reviews);
+
+	}
+
+	public static void measureAccuracyWithTweetsData() {
+		TweetsGenerator generator = new TweetsGenerator("full-corpus.csv");
+		try {
+			generator.loadTweets();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		List<SentimentDocument> tweets = generator.getTweets();
+		System.out.println("All tweets");
+		measureAccuracy(tweets);
+
+		tweets = generator.getSubjectiveTweets();
+		System.out.println("########################");
+		System.out.println("Subjective tweets");
+		measureAccuracy(tweets);
+
 	}
 
 	public static void measureAccuracy(final List<SentimentDocument> docments) {

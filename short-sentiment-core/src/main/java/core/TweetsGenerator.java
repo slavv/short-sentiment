@@ -22,7 +22,7 @@ public class TweetsGenerator {
 		return s.substring(1, s.length() - 1);
 	}
 
-	public List<Tweet> loadTweets() throws IOException {
+	public void loadTweets() throws IOException {
 		List<String> lines = Files.readAllLines(Paths.get(filename),
 				Charset.defaultCharset());
 		Iterator<String> lineIterator = lines.iterator();
@@ -37,7 +37,6 @@ public class TweetsGenerator {
 			String text = removeQuotes(tokens[4]);
 			tweets.add(new Tweet(theme, sentiment, text));
 		}
-		return tweets;
 	}
 
 	public List<SentimentDocument> getTweets() {
