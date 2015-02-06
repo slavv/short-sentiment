@@ -9,7 +9,15 @@ import core.classifier.TweetClassifier;
 
 public class Main {
 	public static void main(String[] args) {
-		measureAccuracyWithShortReviewsData();
+		measureAccuracyWithMovieReviewsData();
+	}
+
+	public static void measureAccuracyWithMovieReviewsData() {
+		MovieReviewsGenerator generator = new MovieReviewsGenerator("review-files");
+		generator.loadReviews();
+		List<SentimentDocument> reviews = generator.getReviews();
+		measureAccuracy(reviews);
+
 	}
 
 	public static void measureAccuracyWithShortReviewsData() {
@@ -22,7 +30,6 @@ public class Main {
 		}
 
 		List<SentimentDocument> reviews = generator.getReviews();
-		System.out.println("All tweets");
 		measureAccuracy(reviews);
 
 	}
