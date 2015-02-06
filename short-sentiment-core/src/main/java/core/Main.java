@@ -6,10 +6,13 @@ import java.util.List;
 import core.classifier.MaxEntClassifier;
 import core.classifier.NaiveBayesClassifier;
 import core.classifier.TweetClassifier;
+import core.stanford.StanfordClassifier;
 
 public class Main {
 	public static void main(String[] args) {
-		measureAccuracyWithMovieReviewsData();
+        StanfordClassifier stanfordClassifier = new StanfordClassifier();
+        stanfordClassifier.classify("Greatest movie ever!");
+        //measureAccuracyWithMovieReviewsData();
 	}
 
 	public static void measureAccuracyWithMovieReviewsData() {
