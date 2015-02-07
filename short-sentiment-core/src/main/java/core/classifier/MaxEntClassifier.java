@@ -14,6 +14,7 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
+import cc.mallet.types.InstanceList;
 import core.SentimentDocument;
 
 public class MaxEntClassifier implements TweetClassifier {
@@ -62,6 +63,13 @@ public class MaxEntClassifier implements TweetClassifier {
 		}
 		return trial.getAccuracy();
 	}
+
+    @Override
+    public Double getAccuracy(List<SentimentDocument> docs) {
+        Classifier clfr = getMalletClassifier();
+        InstanceList[] testInstances = ClassifierBuilder.buildInstanceLists(docs, buildPipe(), 1.0);
+        return clfr.getAccuracy(testInstances[0]);
+    }
 
 	private Pipe buildPipe() {
 		Pattern tokenPattern = Pattern.compile("[\\p{L}\\p{N}_]+");

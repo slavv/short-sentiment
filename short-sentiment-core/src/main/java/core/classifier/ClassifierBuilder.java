@@ -27,7 +27,7 @@ public class ClassifierBuilder {
 		return new ClassifierResult(classifier, trial);
 	}
 
-	private static InstanceList[] buildInstanceLists(List<SentimentDocument> docs, Pipe pipe,
+	public static InstanceList[] buildInstanceLists(List<SentimentDocument> docs, Pipe pipe,
 			double trainingPart) {
 		InstanceList instances = new InstanceList(pipe);
 

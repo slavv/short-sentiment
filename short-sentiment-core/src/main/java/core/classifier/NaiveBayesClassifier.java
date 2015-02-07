@@ -1,5 +1,6 @@
 package core.classifier;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,7 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
+import cc.mallet.types.InstanceList;
 import core.SentimentDocument;
 
 public class NaiveBayesClassifier implements TweetClassifier {
@@ -64,7 +66,14 @@ public class NaiveBayesClassifier implements TweetClassifier {
 		return trial.getAccuracy();
 	}
 
-	private Pipe buildPipe() {
+    @Override
+    public Double getAccuracy(List<SentimentDocument> docs) {
+        Classifier clfr = getMalletClassifier();
+        InstanceList[] testInstances = ClassifierBuilder.buildInstanceLists(docs, buildPipe(), 1.0);
+        return clfr.getAccuracy(testInstances[0]);
+    }
+
+    private Pipe buildPipe() {
 		Pattern tokenPattern = Pattern.compile("[\\p{L}\\p{N}_]+");
 
 		SerialPipes pipeline = new SerialPipes(new Pipe[] {

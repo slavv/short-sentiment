@@ -12,6 +12,7 @@ import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.pipe.TokenSequenceRemoveStopwords;
+import cc.mallet.types.InstanceList;
 import core.SentimentDocument;
 import core.pipe.CharSequence2StemmedTokenSequence;
 
@@ -27,7 +28,7 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 	 * percentage of the given documents. The rest data will be used for
 	 * testing.
 	 *
-	 * @param tweets
+	 * @param documents
 	 *            a list of documents
 	 * @param trainingPart
 	 *            a number between 0 and 1.
@@ -62,6 +63,13 @@ public class NaiveBayesGateClassifier implements TweetClassifier {
 		}
 		return trial.getAccuracy();
 	}
+
+    @Override
+    public Double getAccuracy(List<SentimentDocument> docs) {
+        Classifier clfr = getMalletClassifier();
+        InstanceList[] testInstances = ClassifierBuilder.buildInstanceLists(docs, buildPipe(), 1.0);
+        return clfr.getAccuracy(testInstances[0]);
+    }
 
 	private Pipe buildPipe() {
 		SerialPipes pipeline = new SerialPipes(new Pipe[] {

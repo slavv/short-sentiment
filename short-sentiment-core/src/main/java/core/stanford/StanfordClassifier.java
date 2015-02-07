@@ -12,21 +12,41 @@ import java.util.Properties;
 
 public class StanfordClassifier {
 
-    public void classify (String text) {
+    private StanfordCoreNLP pipeline;
+    private String[] sentimentText = {"Very Negative", "Negative", "Neutral", "Positive", "Very Positive"};
+    private static final int NEUTRAL = 2;
+
+    public StanfordClassifier() {
         Properties props = new Properties();
         props.setProperty("annotators", "tokenize, ssplit, parse, sentiment");
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
+        pipeline = new StanfordCoreNLP(props);
+    }
 
+    public int classify (String text) {
         Annotation document = new Annotation(text);
-
         pipeline.annotate(document);
 
-        String[] sentimentText = {"Very Negative", "Negative", "Neutral", "Positive", "Very Positive"};
+        int sentenceCount = 0;
+        int totalScore = 0;
         for (CoreMap sentence : document.get(CoreAnnotations.SentencesAnnotation.class)) {
             Tree tree = sentence.get(SentimentCoreAnnotations.AnnotatedTree.class);
             int score = RNNCoreAnnotations.getPredictedClass(tree);
-            System.out.println(sentimentText[score]);
 
+            if (score != NEUTRAL) {
+
+                sentenceCount++;
+                totalScore += score;
+            }
         }
+
+        int textScore = NEUTRAL;
+        if (sentenceCount != 0) {
+            System.out.println("Total score: " + totalScore + " sentences: " + sentenceCount );
+            textScore = totalScore / sentenceCount;
+        }
+
+        System.out.println("Stanford: " + sentimentText[textScore]);
+
+        return textScore;
     }
 }

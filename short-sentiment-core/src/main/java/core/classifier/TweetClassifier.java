@@ -1,6 +1,10 @@
 package core.classifier;
 
 import cc.mallet.classify.Classifier;
+import core.SentimentDocument;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Interface representing a classifier.
@@ -21,4 +25,6 @@ public interface TweetClassifier {
 	 * @return the accuracy of the classifier
 	 */
 	Double getAccuracy();
+
+    Double getAccuracy(List<SentimentDocument> docs);
 }
