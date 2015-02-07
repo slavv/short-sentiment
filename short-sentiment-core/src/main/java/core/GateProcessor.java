@@ -50,19 +50,25 @@ public class GateProcessor {
 		corpus.add(document);
 		controller.setCorpus(corpus);
 		controller.execute();
-		return getTokens(corpus);
+		return getTokens(corpus, text);
 	}
 
-	private List<Token> getTokens(Corpus corpus) {
+	private List<Token> getTokens(Corpus corpus, String s) {
 		Document doc = corpus.get(0);
 		List<Token> tokens = new ArrayList<Token>();
 		for (Annotation a : doc.getAnnotations()) {
 			if (a.getType().equals("Token")) {
 				FeatureMap features = a.getFeatures();
-				System.out.println((String) features.get("stem"));
-				tokens.add(new Token((String) features.get("stem")));
+				String stem = (String) features.get("stem");
+				if (!stem.equals("#")) {
+					System.out.print( stem + " ");
+					tokens.add(new Token(stem));
+				}
 			}
 		}
+		System.out.println();
+		System.out.println(s);
+		System.out.println("#########################");
 		return tokens;
 	}
 }

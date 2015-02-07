@@ -19,13 +19,13 @@ import core.datagenerator.TweetsGenerator2;
 import core.stanford.StanfordClassifier;
 
 public class Main {
-	static int samples = 10;
+	static int samples = 100;
 	public static void main(String[] args) {
 		LogManager.getLogManager().reset();
         Logger globalLogger = Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
         globalLogger.setLevel(java.util.logging.Level.OFF);
 
-        Pipe simplePipe = ClassifierBuilder.buildGateNgramPipe(2);
+        Pipe simplePipe = ClassifierBuilder.buildSimplePipe();
         InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(getSubjectiveTweets(), simplePipe);
 
 

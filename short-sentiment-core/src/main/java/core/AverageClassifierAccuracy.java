@@ -3,7 +3,7 @@ package core;
 import core.classifier.SentimentClassifier;
 
 public class AverageClassifierAccuracy {
-	private EvaluationClassifierBuilder builder;
+	private final EvaluationClassifierBuilder builder;
 	private int samples = 100;
 
 	public AverageClassifierAccuracy(EvaluationClassifierBuilder builder) {
@@ -21,8 +21,8 @@ public class AverageClassifierAccuracy {
 		double max = Double.MIN_VALUE;
 		double sum = 0;
 		for (int i = 0; i < samples; i++) {
-			System.out.println("Training " + (i + 1) + " out of " + samples
-					+ " classifiers.");
+//			System.out.println("Training " + (i + 1) + " out of " + samples
+//					+ " classifiers.");
             SentimentClassifier c = builder.buildClassifier();
 			double accuracy = c.getAccuracy();
 			sum += accuracy;
