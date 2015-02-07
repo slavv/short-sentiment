@@ -1,5 +1,7 @@
 package core.stanford;
 
+import java.util.Properties;
+
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.neural.rnn.RNNCoreAnnotations;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -8,12 +10,10 @@ import edu.stanford.nlp.sentiment.SentimentCoreAnnotations;
 import edu.stanford.nlp.trees.Tree;
 import edu.stanford.nlp.util.CoreMap;
 
-import java.util.Properties;
-
 public class StanfordClassifier {
 
-    private StanfordCoreNLP pipeline;
-    private String[] sentimentText = {"Very Negative", "Negative", "Neutral", "Positive", "Very Positive"};
+    private final StanfordCoreNLP pipeline;
+    private final String[] sentimentText = {"Very Negative", "Negative", "Neutral", "Positive", "Very Positive"};
     private static final int NEUTRAL = 2;
 
     public StanfordClassifier() {
@@ -33,7 +33,6 @@ public class StanfordClassifier {
             int score = RNNCoreAnnotations.getPredictedClass(tree);
 
             if (score != NEUTRAL) {
-
                 sentenceCount++;
                 totalScore += score;
             }
@@ -41,11 +40,11 @@ public class StanfordClassifier {
 
         int textScore = NEUTRAL;
         if (sentenceCount != 0) {
-            System.out.println("Total score: " + totalScore + " sentences: " + sentenceCount );
+            //System.out.println("Total score: " + totalScore + " sentences: " + sentenceCount );
             textScore = totalScore / sentenceCount;
         }
 
-        System.out.println("Stanford: " + sentimentText[textScore]);
+        //System.out.println("Stanford: " + sentimentText[textScore]);
 
         return textScore;
     }

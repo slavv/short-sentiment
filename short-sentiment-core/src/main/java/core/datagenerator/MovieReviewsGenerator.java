@@ -1,4 +1,7 @@
-package core;
+package core.datagenerator;
+
+import static core.SentimentDocument.NEGATIVE;
+import static core.SentimentDocument.POSITIVE;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+
+import core.SentimentDocument;
 
 public class MovieReviewsGenerator {
 	private final String docname;
@@ -22,12 +27,12 @@ public class MovieReviewsGenerator {
 		List<String> positiveTexts = readFromFolder(new File(docname, "pos"));
 		List<String> negativeTexts = readFromFolder(new File(docname, "neg"));
 		for(String text: positiveTexts) {
-			SentimentDocument doc = new SentimentDocument("positive", text);
+			SentimentDocument doc = new SentimentDocument(POSITIVE, text);
 			documents.add(doc);
 		}
 
 		for(String text: negativeTexts) {
-			SentimentDocument doc = new SentimentDocument("negative", text);
+			SentimentDocument doc = new SentimentDocument(NEGATIVE, text);
 			documents.add(doc);
 		}
 	}

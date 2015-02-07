@@ -1,6 +1,5 @@
 package core.classifier;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -14,7 +13,6 @@ import cc.mallet.pipe.Pipe;
 import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
-import cc.mallet.pipe.TokenSequenceRemoveStopwords;
 import cc.mallet.types.InstanceList;
 import core.SentimentDocument;
 
@@ -79,7 +77,7 @@ public class NaiveBayesClassifier implements TweetClassifier {
 		SerialPipes pipeline = new SerialPipes(new Pipe[] {
 				new Input2CharSequence("UTF-8"),
 				new CharSequence2TokenSequence(tokenPattern),
-				new TokenSequenceRemoveStopwords(true, true),
+				//new TokenSequenceRemoveStopwords(true, true),
 				new TokenSequence2FeatureSequence(), new Target2Label(),
 				new FeatureSequence2FeatureVector() });
 		return pipeline;

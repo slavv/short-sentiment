@@ -1,4 +1,7 @@
-package core;
+package core.datagenerator;
+
+import static core.SentimentDocument.NEGATIVE;
+import static core.SentimentDocument.POSITIVE;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -7,6 +10,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import core.SentimentDocument;
+import core.Tweet;
 
 public class TweetsGenerator {
 	private final String filename;
@@ -51,7 +57,7 @@ public class TweetsGenerator {
 		List<SentimentDocument> subjectiveTweets = new ArrayList<SentimentDocument>();
 		for (Tweet t : tweets) {
 			String sentiment = t.getSentiment();
-			if(sentiment.equals("positive") || sentiment.equals("negative")) {
+			if(sentiment.equals(POSITIVE) || sentiment.equals(NEGATIVE)) {
 				subjectiveTweets.add(t);
 			}
 		}

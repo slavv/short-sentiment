@@ -41,6 +41,7 @@ target/
 
 # Data
 full-corpus.csv
+training.processed.csv
 store/
 
 #intejij
