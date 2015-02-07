@@ -59,6 +59,7 @@ public class GateProcessor {
 		for (Annotation a : doc.getAnnotations()) {
 			if (a.getType().equals("Token")) {
 				FeatureMap features = a.getFeatures();
+				System.out.println((String) features.get("stem"));
 				tokens.add(new Token((String) features.get("stem")));
 			}
 		}

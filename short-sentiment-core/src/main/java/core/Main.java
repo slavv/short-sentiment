@@ -5,7 +5,12 @@ import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import core.classifier.*;
+import cc.mallet.pipe.Pipe;
+import cc.mallet.types.InstanceList;
+import core.classifier.ClassifierBuilder;
+import core.classifier.MaxEntClassifier;
+import core.classifier.NaiveBayesClassifier;
+import core.classifier.SVMClassifier;
 import core.classifier.SentimentClassifier;
 import core.datagenerator.MovieReviewsGenerator;
 import core.datagenerator.ShortMovieReviewsGenerator;
@@ -20,112 +25,32 @@ public class Main {
         Logger globalLogger = Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
         globalLogger.setLevel(java.util.logging.Level.OFF);
 
-        nbClassifier(getSubjectiveTweets());
-        nbGateClassifier(getSubjectiveTweets());
-        nbBigramGateClassifier(getSubjectiveTweets());
-        maxEntClassifier(getSubjectiveTweets());
-        svmClassifier(getSubjectiveTweets());
-        stanfordClassifier(getSubjectiveTweets());
+        Pipe simplePipe = ClassifierBuilder.buildGateNgramPipe(2);
+        InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(getSubjectiveTweets(), simplePipe);
 
-        //measureAccuracyWithTweetsData();
-        //measureAccuracyWithMovieReviewsData();
-        //measureStanfordClassifierAccuracyTweets();
-        //measureStanfordClassifierAccuracyMoviewReviews();
-		//measureAccuracy(getAutomaticTweets());
-		//nbClassifier(getSubjectiveTweets());
 
-//		nbClassifier(getSubjectiveTweets());
-//		nbGateClassifier(getSubjectiveTweets());
-//		nbBigramGateClassifier(getSubjectiveTweets());
-//			measureMaxEntCrossDataAccuracy(getAllTweets(), getOtherTweets());
-//			measureMaxEntCrossDataAccuracy(getSubjectiveTweets(), getOtherTweets());
-//        measureNBCrossDataAccuracy(getAutomaticTweets(), getSubjectiveTweets());
-//        measureNBCrossDataAccuracy(getSubjectiveTweets(), getAutomaticTweets());
-//		stanfordClassifier(getSubjectiveTweets());
-//		nbClassifier(getAutomaticTweets());
-//        maxEntClassifier(getSubjectiveTweets());
-
-//        measureNBCrossDataAccuracy(getMovieReviews(), getSubjectiveTweets());
-//        measureNBCrossDataAccuracy(getSubjectiveTweets(), getMovieReviews());
-//        measureMaxEntCrossDataAccuracy(getMovieReviews(), getSubjectiveTweets());
-//        measureMaxEntCrossDataAccuracy(getSubjectiveTweets(), getMovieReviews());
-	}
-
-	public static void measureAccuracyWithMovieReviewsData() {
-		measureAccuracy(getMovieReviews());
+        nbClassifier(simpleTweets);
+        maxEntClassifier(simpleTweets);
+        //svmClassifier(simpleTweets);
+        //stanfordClassifier(getSubjectiveTweets());
 
 	}
 
-	public static void measureAccuracyWithShortReviewsData() {
-		measureAccuracy(getShortMovieReviews());
-	}
-
-	public static void measureAccuracyWithTweetsData() {
-		System.out.println("All tweets");
-		measureAccuracy(getAllTweets());
-        System.out.println("Subjective tweets");
-        measureAccuracy(getSubjectiveTweets());
-	}
-
-    public static void measureMaxEntCrossDataAccuracy(List<SentimentDocument> training, List<SentimentDocument> test) {
+    public static void measureMaxEntCrossDataAccuracy(InstanceList training, InstanceList test) {
         MaxEntClassifier classifier = new MaxEntClassifier(training, 1.0);
         System.out.println(classifier.getAccuracy(test));
     }
 
-    public static void measureNBCrossDataAccuracy(List<SentimentDocument> training, List<SentimentDocument> test) {
+    public static void measureNBCrossDataAccuracy(InstanceList training, InstanceList test) {
         NaiveBayesClassifier classifier = new NaiveBayesClassifier(training, 1.0);
         System.out.println(classifier.getAccuracy(test));
     }
 
-	public static void measureAccuracy(final List<SentimentDocument> documents) {
-		int samples = 5;
-        AverageClassifierAccuracy aca = null;
-        aca = new AverageClassifierAccuracy(
-                new EvaluationClassifierBuilder() {
-                    @Override
-                    public SentimentClassifier buildClassifier() {
-                        return new NaiveBayesClassifier(documents, 0.9);
-                    }
-                }, samples);
-		System.out.println("NaiveBayes: " + aca.getAverageAccuracy());
 
-//		aca = new AverageClassifierAccuracy(new EvaluationClassifierBuilder() {
-//			@Override
-//			public TweetClassifier buildClassifier() {
-//				return new NaiveBayesGateClassifier(documents, 0.9);
-//			}
-//		}, samples);
-//		System.out.println("NaiveBayesGate: " + aca.getAverageAccuracy());
-//
-//		aca = new AverageClassifierAccuracy(new EvaluationClassifierBuilder() {
-//			@Override
-//			public TweetClassifier buildClassifier() {
-//				return new NaiveBayesBigramGateClassifier(documents, 0.9);
-//			}
-//		}, samples);
-//		System.out
-//				.println("NaiveBayesBigramGate: " + aca.getAverageAccuracy());
-
-//		aca = new AverageClassifierAccuracy(new EvaluationClassifierBuilder() {
-//			@Override
-//			public TweetClassifier buildClassifier() {
-//				return new MaxEntClassifier(documents, 0.9);
-//			}
-//		}, samples);
-//		System.out.println("Max ent: " + aca.getAverageAccuracy());
-//
-//		aca = new AverageClassifierAccuracy(new EvaluationClassifierBuilder() {
-//            @Override
-//		    public TweetClassifier buildClassifier() {
-//		        return new SVMClassifier(documents, 0.9);
-//		    }
-//		}, samples);
-//		System.out.println("SVM: " + aca.getAverageAccuracy());
-	}
 
     // classifiers
 
-	public static void nbClassifier(final List<SentimentDocument> documents) {
+	public static void nbClassifier(final InstanceList documents) {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
@@ -136,29 +61,7 @@ public class Main {
 		System.out.println("NaiveBayes: " + aca.getAverageAccuracy());
 	}
 
-	public static void nbGateClassifier(final List<SentimentDocument> documents) {
-		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
-				new EvaluationClassifierBuilder() {
-					@Override
-					public SentimentClassifier buildClassifier() {
-						return new NaiveBayesGateClassifier(documents, 0.9);
-					}
-				}, samples);
-		System.out.println("NaiveBayesGate: " + aca.getAverageAccuracy());
-	}
-
-	public static void nbBigramGateClassifier(final List<SentimentDocument> documents) {
-		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
-				new EvaluationClassifierBuilder() {
-					@Override
-					public SentimentClassifier buildClassifier() {
-						return new NaiveBayesBigramGateClassifier(documents, 0.9);
-					}
-				}, samples);
-		System.out.println("NaiveBayesBigramGate: " + aca.getAverageAccuracy());
-	}
-
-	public static void maxEntClassifier(final List<SentimentDocument> documents) {
+	public static void maxEntClassifier(final InstanceList documents) {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
@@ -169,7 +72,7 @@ public class Main {
 		System.out.println("MaxEnt: " + aca.getAverageAccuracy());
 	}
 
-	public static void svmClassifier(final List<SentimentDocument> documents) {
+	public static void svmClassifier(final InstanceList documents) {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
@@ -197,7 +100,7 @@ public class Main {
             } else {
                 incorrect++;
             }
-            System.out.println("===");
+           // System.out.println("===");
         }
 
         System.out.println("Accuracy : " + (correct / (correct + incorrect)));
@@ -255,6 +158,7 @@ public class Main {
         generator.loadReviews();
         return generator.getReviews();
     }
+
     private static List<SentimentDocument> getShortMovieReviews() {
         ShortMovieReviewsGenerator generator = new ShortMovieReviewsGenerator("short-movie-reviews.txt");
         try {

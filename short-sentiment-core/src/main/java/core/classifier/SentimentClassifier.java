@@ -1,10 +1,7 @@
 package core.classifier;
 
 import cc.mallet.classify.Classifier;
-import core.SentimentDocument;
-
-import java.util.Collection;
-import java.util.List;
+import cc.mallet.types.InstanceList;
 
 /**
  * Interface representing a classifier.
@@ -26,5 +23,5 @@ public interface SentimentClassifier {
 	 */
 	Double getAccuracy();
 
-    Double getAccuracy(List<SentimentDocument> docs);
+    Double getAccuracy(InstanceList docs);
 }
