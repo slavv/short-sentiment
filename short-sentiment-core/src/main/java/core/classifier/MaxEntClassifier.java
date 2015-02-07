@@ -16,7 +16,7 @@ import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.types.InstanceList;
 import core.SentimentDocument;
 
-public class MaxEntClassifier implements TweetClassifier {
+public class MaxEntClassifier implements SentimentClassifier {
 	private final double trainingPart;
 	private final List<SentimentDocument> documents;
 

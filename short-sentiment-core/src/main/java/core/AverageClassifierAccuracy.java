@@ -1,6 +1,6 @@
 package core;
 
-import core.classifier.TweetClassifier;
+import core.classifier.SentimentClassifier;
 
 public class AverageClassifierAccuracy {
 	private EvaluationClassifierBuilder builder;
@@ -23,7 +23,7 @@ public class AverageClassifierAccuracy {
 		for (int i = 0; i < samples; i++) {
 			System.out.println("Training " + (i + 1) + " out of " + samples
 					+ " classifiers.");
-			TweetClassifier c = builder.buildClassifier();
+            SentimentClassifier c = builder.buildClassifier();
 			double accuracy = c.getAccuracy();
 			sum += accuracy;
 			if (accuracy < min) {

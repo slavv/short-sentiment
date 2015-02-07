@@ -5,12 +5,8 @@ import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
-import core.classifier.MaxEntClassifier;
-import core.classifier.NaiveBayesBigramGateClassifier;
-import core.classifier.NaiveBayesClassifier;
-import core.classifier.NaiveBayesGateClassifier;
-import core.classifier.SVMClassifier;
-import core.classifier.TweetClassifier;
+import core.classifier.*;
+import core.classifier.SentimentClassifier;
 import core.datagenerator.MovieReviewsGenerator;
 import core.datagenerator.ShortMovieReviewsGenerator;
 import core.datagenerator.TweetsGenerator;
@@ -87,7 +83,7 @@ public class Main {
         aca = new AverageClassifierAccuracy(
                 new EvaluationClassifierBuilder() {
                     @Override
-                    public TweetClassifier buildClassifier() {
+                    public SentimentClassifier buildClassifier() {
                         return new NaiveBayesClassifier(documents, 0.9);
                     }
                 }, samples);
@@ -133,7 +129,7 @@ public class Main {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
-					public TweetClassifier buildClassifier() {
+					public SentimentClassifier buildClassifier() {
 						return new NaiveBayesClassifier(documents, 0.9);
 					}
 				}, samples);
@@ -144,7 +140,7 @@ public class Main {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
-					public TweetClassifier buildClassifier() {
+					public SentimentClassifier buildClassifier() {
 						return new NaiveBayesGateClassifier(documents, 0.9);
 					}
 				}, samples);
@@ -155,7 +151,7 @@ public class Main {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
-					public TweetClassifier buildClassifier() {
+					public SentimentClassifier buildClassifier() {
 						return new NaiveBayesBigramGateClassifier(documents, 0.9);
 					}
 				}, samples);
@@ -166,7 +162,7 @@ public class Main {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
-					public TweetClassifier buildClassifier() {
+					public SentimentClassifier buildClassifier() {
 						return new MaxEntClassifier(documents, 0.9);
 					}
 				}, samples);
@@ -177,7 +173,7 @@ public class Main {
 		AverageClassifierAccuracy aca = new AverageClassifierAccuracy(
 				new EvaluationClassifierBuilder() {
 					@Override
-					public TweetClassifier buildClassifier() {
+					public SentimentClassifier buildClassifier() {
 						return new SVMClassifier(documents, 0.9);
 					}
 				}, samples);

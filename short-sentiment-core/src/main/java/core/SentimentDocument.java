@@ -1,19 +1,17 @@
 package core;
 
 public class SentimentDocument {
+    protected String sentiment;
+    protected String text;
 
 	public static final String POSITIVE = "positive";
 	public static final String NEGATIVE = "negative";
 	public static final String NEUTRAL = "neutral";
 
 	public SentimentDocument(String sentiment, String text) {
-		super();
 		this.sentiment = sentiment;
 		this.text = text;
 	}
-
-	String sentiment;
-	String text;
 
 	public String getSentiment() {
 		return sentiment;

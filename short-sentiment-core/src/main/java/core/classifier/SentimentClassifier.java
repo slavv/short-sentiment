@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Interface representing a classifier.
  */
-public interface TweetClassifier {
+public interface SentimentClassifier {
 
 	/**
 	 * Retrieves a trained mallet implementation of a classifier.

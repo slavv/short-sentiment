@@ -1,7 +1,7 @@
 package core;
 
-import core.classifier.TweetClassifier;
+import core.classifier.SentimentClassifier;
 
 public interface EvaluationClassifierBuilder {
-	TweetClassifier buildClassifier();
+    SentimentClassifier buildClassifier();
 }

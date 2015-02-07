@@ -19,7 +19,7 @@ import core.pipe.TokenSequence2NgramTokenSequence;
 /**
  * Builds various Mallet classifiers given list of tweets.
  */
-public class NaiveBayesBigramGateClassifier implements TweetClassifier {
+public class NaiveBayesBigramGateClassifier implements SentimentClassifier {
 	private final double trainingPart;
 	private final List<SentimentDocument> documents;
 

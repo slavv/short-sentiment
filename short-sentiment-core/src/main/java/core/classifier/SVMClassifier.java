@@ -19,7 +19,7 @@ import external.svm.SVMTrainer;
 /**
  * Builds various Mallet classifiers given list of tweets.
  */
-public class SVMClassifier implements TweetClassifier {
+public class SVMClassifier implements SentimentClassifier {
 	private final double trainingPart;
 	private final List<SentimentDocument> documents;
 

@@ -15,7 +15,7 @@ import cc.mallet.types.InstanceList;
 import core.SentimentDocument;
 import core.pipe.CharSequence2StemmedTokenSequence;
 
-public class NaiveBayesGateClassifier implements TweetClassifier {
+public class NaiveBayesGateClassifier implements SentimentClassifier {
 	private final double trainingPart;
 	private final List<SentimentDocument> documents;
 

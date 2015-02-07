@@ -16,7 +16,7 @@ import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.types.InstanceList;
 import core.SentimentDocument;
 
-public class NaiveBayesClassifier implements TweetClassifier {
+public class NaiveBayesClassifier implements SentimentClassifier {
 	private final double trainingPart;
 	private final List<SentimentDocument> documents;
 
