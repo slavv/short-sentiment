@@ -1,0 +1,88 @@
+Phase:firstpass
+Input: Token
+Options: control = brill
+Rule: SentimentBigram1
+( 
+	{Token.category == JJ}
+	(
+		{Token.category == JJ} 
+		| 
+		{Token.category == NNS})
+): sentiment
+(
+	{!Token.category == JJ}
+)
+-->
+:sentiment.Sentiment = {rule = "SentimentBigram1" }
+
+Rule: SentimentBigram2
+( 
+	(
+		{Token.category == RB}
+		|
+		{Token.category == RBR}
+		|
+		{Token.category == RBS}
+	)
+	{Token.category == JJ} 
+
+): sentiment
+(
+	{!Token.category == NN, !Token.category == NNS}
+
+)
+-->
+:sentiment.Sentiment = {rule = "SentimentBigram2" }
+
+Rule: SentimentBigram3
+( 
+	{Token.category == JJ}
+	{Token.category == JJ} 
+
+): sentiment
+(
+	{!Token.category == NN, !Token.category == NNS}
+
+)
+-->
+:sentiment.Sentiment = {rule = "SentimentBigram3" }
+
+Rule: SentimentBigram4
+( 
+	(
+		{Token.category == NN}
+		|
+		{Token.category == NNS}
+	)
+	{Token.category == JJ} 
+
+): sentiment
+(
+	{!Token.category == NN, !Token.category == NNS}
+
+)
+-->
+:sentiment.Sentiment = {rule = "SentimentBigram4" }
+
+Rule: SentimentBigram5
+( 
+	(
+		{Token.category == RB}
+		|
+		{Token.category == RBR}
+		|
+		{Token.category == RBS}
+	)
+	(
+		{Token.category == VB}
+		|
+		{Token.category == VBD}
+		|
+		{Token.category == VBN}
+		|
+		{Token.category == VBG}
+	) 
+
+): sentiment
+-->
+:sentiment.Sentiment = {rule = "SentimentBigram5" }
