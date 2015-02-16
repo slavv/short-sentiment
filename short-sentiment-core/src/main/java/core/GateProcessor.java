@@ -61,14 +61,14 @@ public class GateProcessor {
 				FeatureMap features = a.getFeatures();
 				String stem = (String) features.get("stem");
 				if (!stem.equals("#")) {
-					System.out.print( stem + " ");
+//					System.out.print( stem + " ");
 					tokens.add(new Token(stem));
 				}
 			}
 		}
-		System.out.println();
-		System.out.println(s);
-		System.out.println("#########################");
+//		System.out.println();
+//		System.out.println(s);
+//		System.out.println("#########################");
 		return tokens;
 	}
 }

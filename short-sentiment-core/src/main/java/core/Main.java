@@ -26,11 +26,33 @@ public class Main {
         globalLogger.setLevel(java.util.logging.Level.OFF);
 
         Pipe simplePipe = ClassifierBuilder.buildSimplePipe();
-        InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(getSubjectiveTweets(), simplePipe);
-
+        InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(getTweetsBySubjectivity(), simplePipe);
+//        InstanceList autoTweets = ClassifierBuilder.buildInstanceLists(getAutomaticTweets(), simplePipe);
+//        InstanceList movies = ClassifierBuilder.buildInstanceLists(getMovieReviews(), simplePipe);
+//        InstanceList shortMovies = ClassifierBuilder.buildInstanceLists(getShortMovieReviews(), simplePipe);
 
         nbClassifier(simpleTweets);
         maxEntClassifier(simpleTweets);
+
+//
+//        measureNBCrossDataAccuracy(shortMovies, autoTweets);
+//        measureNBCrossDataAccuracy(autoTweets, shortMovies);
+//
+//        measureNBCrossDataAccuracy(autoTweets, movies);
+//        measureNBCrossDataAccuracy(movies, autoTweets);
+//
+//        measureNBCrossDataAccuracy(simpleTweets,movies);
+//        measureNBCrossDataAccuracy(movies, simpleTweets);
+//
+//        measureNBCrossDataAccuracy(shortMovies,movies);
+//        measureNBCrossDataAccuracy(movies, shortMovies);
+//
+//        measureNBCrossDataAccuracy(simpleTweets,shortMovies);
+//        measureNBCrossDataAccuracy(shortMovies, simpleTweets);
+
+
+        //nbClassifier(simpleTweets);
+        //maxEntClassifier(simpleTweets);
         //svmClassifier(simpleTweets);
         //stanfordClassifier(getSubjectiveTweets());
 
@@ -151,6 +173,18 @@ public class Main {
         }
 
         return generator.getSubjectiveTweets();
+    }
+
+    private static List<SentimentDocument> getTweetsBySubjectivity() {
+        TweetsGenerator generator = new TweetsGenerator("full-corpus.csv");
+        try {
+            generator.loadTweets();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return generator.getTweetsBySubjectivity();
     }
 
     private static List<SentimentDocument> getMovieReviews() {
