@@ -40,8 +40,8 @@ public class GateProcessor {
 
 	public void initialize() throws GateException, IOException {
 		Gate.init();
-		controller = (CorpusController) PersistenceManager.loadObjectFromFile(
-				new File(state));
+		controller = (CorpusController) PersistenceManager
+				.loadObjectFromFile(new File(state));
 	}
 
 	public List<Token> processString(String text) throws GateException {
@@ -53,6 +53,60 @@ public class GateProcessor {
 		return getTokens(corpus, text);
 	}
 
+	public List<Token> processStringWithPos(String text) throws GateException {
+		Corpus corpus = Factory.newCorpus("Tweet corpus");
+		Document document = Factory.newDocument(text);
+		corpus.add(document);
+		controller.setCorpus(corpus);
+		controller.execute();
+		return getSentimentTokens(corpus, text);
+	}
+
+	public List<Token> processStringWithPosAdd(String text) throws GateException {
+		Corpus corpus = Factory.newCorpus("Tweet corpus");
+		Document document = Factory.newDocument(text);
+		corpus.add(document);
+		controller.setCorpus(corpus);
+		controller.execute();
+		return getSentimentTokensAdd(corpus, text);
+	}
+
+	private List<Token> getSentimentTokens(Corpus corpus, String s) {
+		Document doc = corpus.get(0);
+		List<Token> tokens = new ArrayList<Token>();
+		for (Annotation a : doc.getAnnotations()) {
+			if (a.getType().equals("Sentiment")) {
+				String pos = (String) a.getFeatures().get("type1") + " "
+						+ (String) a.getFeatures().get("type2");
+				tokens.add(new Token(pos));
+			}
+		}
+		// System.out.println();
+		// System.out.println(s);
+		// System.out.println("#########################");
+		return tokens;
+	}
+
+	private List<Token> getSentimentTokensAdd(Corpus corpus, String s) {
+		Document doc = corpus.get(0);
+		List<Token> tokens = new ArrayList<Token>();
+		for (Annotation a : doc.getAnnotations()) {
+			if (a.getType().equals("Sentiment")) {
+				String pos = (String) a.getFeatures().get("type1") + " "
+						+ (String) a.getFeatures().get("type2");
+				tokens.add(new Token(pos));
+			} else if (a.getType().equals("Token")) {
+				FeatureMap features = a.getFeatures();
+				String stem = (String) features.get("stem");
+				if (!stem.equals("#")) {
+					tokens.add(new Token(stem));
+				}
+			}
+
+		}
+		return tokens;
+	}
+
 	private List<Token> getTokens(Corpus corpus, String s) {
 		Document doc = corpus.get(0);
 		List<Token> tokens = new ArrayList<Token>();
@@ -61,14 +115,13 @@ public class GateProcessor {
 				FeatureMap features = a.getFeatures();
 				String stem = (String) features.get("stem");
 				if (!stem.equals("#")) {
-//					System.out.print( stem + " ");
 					tokens.add(new Token(stem));
 				}
 			}
 		}
-//		System.out.println();
-//		System.out.println(s);
-//		System.out.println("#########################");
+		// System.out.println();
+		// System.out.println(s);
+		// System.out.println("#########################");
 		return tokens;
 	}
 }

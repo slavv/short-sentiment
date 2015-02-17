@@ -7,10 +7,10 @@ import java.util.logging.LogManager;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
-import cc.mallet.pipe.CharSequence2TokenSequence;
 import cc.mallet.pipe.FeatureSequence2FeatureVector;
 import cc.mallet.pipe.Input2CharSequence;
 import cc.mallet.pipe.Pipe;
+import cc.mallet.pipe.SerialPipes;
 import cc.mallet.pipe.Target2Label;
 import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.types.InstanceList;
@@ -23,6 +23,7 @@ import core.datagenerator.MovieReviewsGenerator;
 import core.datagenerator.ShortMovieReviewsGenerator;
 import core.datagenerator.TweetsGenerator;
 import core.datagenerator.TweetsGenerator2;
+import core.pipe.TokenSequencePOSTokenSequence;
 import core.stanford.StanfordClassifier;
 
 public class Main {
@@ -34,13 +35,22 @@ public class Main {
         globalLogger.setLevel(java.util.logging.Level.OFF);
 
         List<Pipe> pipeList = new ArrayList<Pipe>();
-		pipeList.add(new Input2CharSequence("UTF-8"));
-		pipeList.add(new CharSequence2TokenSequence(tokenPattern));
-		pipeList.add(new TokenSequence2FeatureSequence());
-		pipeList.add(new Target2Label());
-		pipeList.add(new FeatureSequence2FeatureVector());
+        pipeList.add(new SerialPipes(new Pipe[] {
+				new Input2CharSequence("UTF-8"),
+				new TokenSequencePOSTokenSequence()}));
+        pipeList.add(new SerialPipes(new Pipe[] {
+				new TokenSequence2FeatureSequence(), new Target2Label(),
+				new FeatureSequence2FeatureVector() }));
+//		pipeList.add(new Input2CharSequence("UTF-8"));
+//		pipeList.add(new CharSequence2TokenSequence(tokenPattern));
+//		pipeList.add(new TokenSequence2FeatureSequence());
+//		pipeList.add(new Target2Label());
+//		pipeList.add(new FeatureSequence2FeatureVector());
 
-        InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(getAllTweets(), pipeList);
+		InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(
+				getMovieReviews(), pipeList);
+//		InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(
+//				getAllTweets(), ClassifierBuilder.buildGateSentimentPipe());
 //        InstanceList autoTweets = ClassifierBuilder.buildInstanceLists(getAutomaticTweets(), simplePipe);
 //        InstanceList movies = ClassifierBuilder.buildInstanceLists(getMovieReviews(), simplePipe);
 //        InstanceList shortMovies = ClassifierBuilder.buildInstanceLists(getShortMovieReviews(), simplePipe);

@@ -21,6 +21,7 @@ import cc.mallet.util.Randoms;
 import core.SentimentDocument;
 import core.pipe.CharSequence2StemmedTokenSequence;
 import core.pipe.TokenSequence2NgramTokenSequence;
+import core.pipe.TokenSequencePOSTokenAddSequence;
 
 public class ClassifierBuilder {
 
@@ -38,11 +39,12 @@ public class ClassifierBuilder {
 		return new ClassifierResult(classifier, trial);
 	}
 
-	public static InstanceList buildInstanceLists(List<SentimentDocument> docs, Pipe pipe) {
+	public static InstanceList buildInstanceLists(List<SentimentDocument> docs,
+			Pipe pipe) {
 		InstanceList instances = new InstanceList(pipe);
 
 		int index = 0;
-		for (SentimentDocument doc: docs) {
+		for (SentimentDocument doc : docs) {
 			instances.addThruPipe(new Instance(doc.getText(), doc
 					.getSentiment(), "name:" + index++, null));
 		}
@@ -50,17 +52,19 @@ public class ClassifierBuilder {
 		return instances;
 	}
 
-	public static InstanceList buildInstanceLists(List<SentimentDocument> docs, List<Pipe> pipes) {
+	public static InstanceList buildInstanceLists(List<SentimentDocument> docs,
+			List<Pipe> pipes) {
 		Iterator<Pipe> iter = pipes.iterator();
 		Pipe pipe = iter.next();
 		InstanceList instances = buildInstanceLists(docs, pipe);
-		while(iter.hasNext()) {
-			System.out.println("I am infinite.");
-			InstanceList newInstances = new InstanceList(iter.next());
-			for (Instance i: instances) {
-				if(i.getData() != null) {
-					newInstances.addThruPipe(new Instance(i.getData(), i.getTarget(),
-							i.getName(), i.getSource()));
+		while (iter.hasNext()) {
+			pipe = iter.next();
+			System.out.println(pipe.getAlphabet());
+			InstanceList newInstances = new InstanceList(pipe);
+			for (Instance i : instances) {
+				if (!i.getData().equals("@@wrong@@@")) {
+					i.unLock();
+					newInstances.addThruPipe(i);
 				}
 			}
 			instances = newInstances;
@@ -96,6 +100,15 @@ public class ClassifierBuilder {
 		SerialPipes pipeline = new SerialPipes(new Pipe[] {
 				new Input2CharSequence("UTF-8"),
 				new CharSequence2StemmedTokenSequence(),
+				new TokenSequence2FeatureSequence(), new Target2Label(),
+				new FeatureSequence2FeatureVector() });
+		return pipeline;
+	}
+
+	public static Pipe buildGateSentimentPipe() {
+		SerialPipes pipeline = new SerialPipes(new Pipe[] {
+				new Input2CharSequence("UTF-8"),
+				new TokenSequencePOSTokenAddSequence(),
 				new TokenSequence2FeatureSequence(), new Target2Label(),
 				new FeatureSequence2FeatureVector() });
 		return pipeline;

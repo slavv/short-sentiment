@@ -3,17 +3,20 @@ Input: Token
 Options: control = brill
 Rule: SentimentBigram1
 ( 
-	{Token.category == JJ}
+	(
+		{Token.category == JJ}
+	): sent1
 	(
 		{Token.category == JJ} 
 		| 
-		{Token.category == NNS})
+		{Token.category == NNS}
+	): sent2
 ): sentiment
 (
 	{!Token.category == JJ}
 )
 -->
-:sentiment.Sentiment = {rule = "SentimentBigram1" }
+:sentiment.Sentiment = {rule = "SentimentBigram1", type1=:sent1.Token.stem, type2=:sent2.Token.stem }
 
 Rule: SentimentBigram2
 ( 
@@ -23,21 +26,26 @@ Rule: SentimentBigram2
 		{Token.category == RBR}
 		|
 		{Token.category == RBS}
-	)
-	{Token.category == JJ} 
-
+	): sent1
+	(
+		{Token.category == JJ}
+	): sent2
 ): sentiment
 (
 	{!Token.category == NN, !Token.category == NNS}
 
 )
 -->
-:sentiment.Sentiment = {rule = "SentimentBigram2" }
+:sentiment.Sentiment = {rule = "SentimentBigram2", type1=:sent1.Token.stem, type2=:sent2.Token.stem}
 
 Rule: SentimentBigram3
 ( 
-	{Token.category == JJ}
-	{Token.category == JJ} 
+	(
+		{Token.category == JJ}
+	): sent1
+	(
+		{Token.category == JJ}
+	): sent2 
 
 ): sentiment
 (
@@ -45,7 +53,7 @@ Rule: SentimentBigram3
 
 )
 -->
-:sentiment.Sentiment = {rule = "SentimentBigram3" }
+:sentiment.Sentiment = {rule = "SentimentBigram3", type1=:sent1.Token.stem, type2=:sent2.Token.stem}
 
 Rule: SentimentBigram4
 ( 
@@ -53,8 +61,10 @@ Rule: SentimentBigram4
 		{Token.category == NN}
 		|
 		{Token.category == NNS}
-	)
-	{Token.category == JJ} 
+	): sent1
+	(
+		{Token.category == JJ}
+	): sent2 
 
 ): sentiment
 (
@@ -62,7 +72,7 @@ Rule: SentimentBigram4
 
 )
 -->
-:sentiment.Sentiment = {rule = "SentimentBigram4" }
+:sentiment.Sentiment = {rule = "SentimentBigram4", type1=:sent1.Token.stem, type2=:sent2.Token.stem}
 
 Rule: SentimentBigram5
 ( 
@@ -72,7 +82,7 @@ Rule: SentimentBigram5
 		{Token.category == RBR}
 		|
 		{Token.category == RBS}
-	)
+	): sent1
 	(
 		{Token.category == VB}
 		|
@@ -81,8 +91,8 @@ Rule: SentimentBigram5
 		{Token.category == VBN}
 		|
 		{Token.category == VBG}
-	) 
+	): sent2
 
 ): sentiment
 -->
-:sentiment.Sentiment = {rule = "SentimentBigram5" }
+:sentiment.Sentiment = {rule = "SentimentBigram5", type1=:sent1.Token.stem, type2=:sent2.Token.stem}

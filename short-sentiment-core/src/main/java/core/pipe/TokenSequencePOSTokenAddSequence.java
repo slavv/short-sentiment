@@ -13,14 +13,14 @@ import cc.mallet.types.Token;
 import cc.mallet.types.TokenSequence;
 import core.GateProcessor;
 
-public class TokenSequencePOSTokenSequence extends Pipe implements Serializable {
+public class TokenSequencePOSTokenAddSequence extends Pipe implements Serializable {
 	/**
 	 *
 	 */
 	private static final long serialVersionUID = 1L;
 	GateProcessor processor;
 
-	public TokenSequencePOSTokenSequence() {
+	public TokenSequencePOSTokenAddSequence() {
 		processor = new GateProcessor("twitterState2.xgapp");
 		try {
 			processor.initialize();
@@ -39,17 +39,14 @@ public class TokenSequencePOSTokenSequence extends Pipe implements Serializable 
 		String dataString = charSequence.toString();
 		List<Token> tokens = new ArrayList<>();
 		try {
-			tokens = processor.processStringWithPos(dataString);
+			tokens = processor.processStringWithPosAdd(dataString);
 		} catch (GateException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (tokens.isEmpty()) {
-			carrier.setData("@@wrong@@@");
-		} else {
-			TokenSequence ts = new TokenSequence(tokens);
-			carrier.setData(ts);
-		}
+
+		TokenSequence ts = new TokenSequence(tokens);
+		carrier.setData(ts);
 		return carrier;
 	}
 }
