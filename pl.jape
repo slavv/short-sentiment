@@ -7,14 +7,11 @@ Rule: SentimentBigram1
 		{Token.category == JJ}
 	): sent1
 	(
-		{Token.category == JJ} 
+		{Token.category == NN} 
 		| 
 		{Token.category == NNS}
 	): sent2
 ): sentiment
-(
-	{!Token.category == JJ}
-)
 -->
 :sentiment.Sentiment = {rule = "SentimentBigram1", type1=:sent1.Token.stem, type2=:sent2.Token.stem }
 
