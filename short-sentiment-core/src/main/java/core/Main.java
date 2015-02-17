@@ -1,11 +1,18 @@
 package core;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
+import cc.mallet.pipe.CharSequence2TokenSequence;
+import cc.mallet.pipe.FeatureSequence2FeatureVector;
+import cc.mallet.pipe.Input2CharSequence;
 import cc.mallet.pipe.Pipe;
+import cc.mallet.pipe.Target2Label;
+import cc.mallet.pipe.TokenSequence2FeatureSequence;
 import cc.mallet.types.InstanceList;
 import core.classifier.ClassifierBuilder;
 import core.classifier.MaxEntClassifier;
@@ -19,20 +26,27 @@ import core.datagenerator.TweetsGenerator2;
 import core.stanford.StanfordClassifier;
 
 public class Main {
-	static int samples = 100;
+	static int samples = 10;
 	public static void main(String[] args) {
+		Pattern tokenPattern = Pattern.compile("[\\p{L}\\p{N}_]+");
 		LogManager.getLogManager().reset();
         Logger globalLogger = Logger.getLogger(java.util.logging.Logger.GLOBAL_LOGGER_NAME);
         globalLogger.setLevel(java.util.logging.Level.OFF);
 
-        Pipe simplePipe = ClassifierBuilder.buildSimplePipe();
-        InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(getTweetsBySubjectivity(), simplePipe);
+        List<Pipe> pipeList = new ArrayList<Pipe>();
+		pipeList.add(new Input2CharSequence("UTF-8"));
+		pipeList.add(new CharSequence2TokenSequence(tokenPattern));
+		pipeList.add(new TokenSequence2FeatureSequence());
+		pipeList.add(new Target2Label());
+		pipeList.add(new FeatureSequence2FeatureVector());
+
+        InstanceList simpleTweets = ClassifierBuilder.buildInstanceLists(getAllTweets(), pipeList);
 //        InstanceList autoTweets = ClassifierBuilder.buildInstanceLists(getAutomaticTweets(), simplePipe);
 //        InstanceList movies = ClassifierBuilder.buildInstanceLists(getMovieReviews(), simplePipe);
 //        InstanceList shortMovies = ClassifierBuilder.buildInstanceLists(getShortMovieReviews(), simplePipe);
 
         nbClassifier(simpleTweets);
-        maxEntClassifier(simpleTweets);
+//        maxEntClassifier(simpleTweets);
 
 //
 //        measureNBCrossDataAccuracy(shortMovies, autoTweets);

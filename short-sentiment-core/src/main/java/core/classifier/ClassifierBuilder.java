@@ -1,5 +1,6 @@
 package core.classifier;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -44,6 +45,25 @@ public class ClassifierBuilder {
 		for (SentimentDocument doc: docs) {
 			instances.addThruPipe(new Instance(doc.getText(), doc
 					.getSentiment(), "name:" + index++, null));
+		}
+
+		return instances;
+	}
+
+	public static InstanceList buildInstanceLists(List<SentimentDocument> docs, List<Pipe> pipes) {
+		Iterator<Pipe> iter = pipes.iterator();
+		Pipe pipe = iter.next();
+		InstanceList instances = buildInstanceLists(docs, pipe);
+		while(iter.hasNext()) {
+			System.out.println("I am infinite.");
+			InstanceList newInstances = new InstanceList(iter.next());
+			for (Instance i: instances) {
+				if(i.getData() != null) {
+					newInstances.addThruPipe(new Instance(i.getData(), i.getTarget(),
+							i.getName(), i.getSource()));
+				}
+			}
+			instances = newInstances;
 		}
 
 		return instances;
